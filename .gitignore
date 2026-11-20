@@ -1,0 +1,12 @@
+# 生成物
+build/
+DerivedData/
+Whole.xcodeproj
+Payload/
+*.ipa
+*.log
+
+# macOS / Xcode
+.DS_Store
+xcuserdata/
+*.xcuserstate
