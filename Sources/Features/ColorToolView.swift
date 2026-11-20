@@ -36,9 +36,7 @@ struct ColorToolView: View {
                     .frame(height: 150)
                     .overlay(
                         Text(hex)
-                            .font(.title2)
-                            .bold()
-                            .monospaced()
+                            .font(.system(size: 22, weight: .bold, design: .monospaced))
                             .foregroundColor(isLight ? .black : .white)
                     )
                     .shadow(color: .black.opacity(0.15), radius: 4)
@@ -88,7 +86,7 @@ struct ColorToolView: View {
                 .foregroundColor(.secondary)
             Spacer()
             Text(value)
-                .monospaced()
+                .font(.system(.body, design: .monospaced))
             Button {
                 UIPasteboard.general.string = value
                 haptic(.light)
