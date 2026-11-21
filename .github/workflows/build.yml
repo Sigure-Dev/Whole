@@ -112,12 +112,13 @@ jobs:
           zip -qry "$NAME" Payload
           echo "IPA_NAME=$NAME" >> "$GITHUB_ENV"
 
-          # 未署名版(Webインストーラー用)もパッケージ
+          # 未署名版(Webインストーラー用)もパッケージ(アーカイブ内は Payload/Whole.app 構造)
           if [ -d unsigned-app ]; then
             rm -rf Payload-unsigned
             mkdir -p Payload-unsigned/Payload
             cp -R unsigned-app Payload-unsigned/Payload/Whole.app
-            zip -qry Whole-unsigned.ipa Payload-unsigned/Payload 2>/dev/null || (cd Payload-unsigned && zip -qry ../Whole-unsigned.ipa Payload)
+            (cd Payload-unsigned && zip -qry ../Whole-unsigned.ipa Payload)
+            unzip -l Whole-unsigned.ipa | head -4
             ls -lh Whole-unsigned.ipa
           fi
           ls -lh "$NAME"
