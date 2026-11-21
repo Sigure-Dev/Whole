@@ -24,6 +24,8 @@ targets:
           - "Info.plist"
       - path: Resources/Assets.xcassets
         buildPhase: resources
+      - path: Resources/Icons
+        buildPhase: resources
     info:
       path: Sources/Info.plist
     settings:

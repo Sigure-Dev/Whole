@@ -47,49 +47,69 @@
 	<string>コンパスで方位を表示するために使用します。</string>
 	<key>CFBundleIcons</key>
 	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>WholeIconDefault</string>
+				<string>AppIcon60x60</string>
+			</array>
+			<key>CFBundleIconName</key>
+			<string>AppIcon</string>
+		</dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
 			<key>AppIcon-Yoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Yoko</string>
+					<string>WholeIconYoko</string>
 				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Yoko</string>
+				<key>UIPrerenderedIcon</key>
+				<false/>
 			</dict>
 			<key>AppIcon-YokoYoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-YokoYoko</string>
+					<string>WholeIconYokoYoko</string>
 				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-YokoYoko</string>
+				<key>UIPrerenderedIcon</key>
+				<false/>
 			</dict>
 		</dict>
 	</dict>
 	<key>CFBundleIcons~ipad</key>
 	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>WholeIconDefault</string>
+				<string>AppIcon76x76</string>
+			</array>
+			<key>CFBundleIconName</key>
+			<string>AppIcon</string>
+		</dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
 			<key>AppIcon-Yoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Yoko</string>
+					<string>WholeIconYoko</string>
 				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Yoko</string>
+				<key>UIPrerenderedIcon</key>
+				<false/>
 			</dict>
 			<key>AppIcon-YokoYoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-YokoYoko</string>
+					<string>WholeIconYokoYoko</string>
 				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-YokoYoko</string>
+				<key>UIPrerenderedIcon</key>
+				<false/>
 			</dict>
 		</dict>
 	</dict>

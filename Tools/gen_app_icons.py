@@ -76,6 +76,13 @@ def main() -> None:
             os.path.join(prev_dir, "preview.png"), "PNG", optimize=True
         )
         write_json(os.path.join(prev_dir, "Contents.json"), IMAGESET_JSON)
+
+        # Info.plist 手打ち参照用のルーズPNG(バンドルルートに配置される)
+        icons_out = os.path.join(RES, "Icons")
+        os.makedirs(icons_out, exist_ok=True)
+        label = {"AppIcon": "Default", "AppIcon-Yoko": "Yoko", "AppIcon-YokoYoko": "YokoYoko"}[asset_name]
+        icon.save(os.path.join(icons_out, f"WholeIcon{label}.png"), "PNG", optimize=True)
+
         print(f"ok: {asset_name} ({os.path.getsize(png)} bytes)")
 
 
