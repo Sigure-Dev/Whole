@@ -68,13 +68,20 @@ jobs:
           security default-keychain -s "$KEYCHAIN"
           security unlock-keychain -p "$KC_PASS" "$KEYCHAIN"
           security set-keychain-settings -t 3600 "$KEYCHAIN"
-          security import signing.p12 -k "$KEYCHAIN" -P "$P12_PASS" -T /usr/bin/codesign
+
+          # PKCS12 パーサーを security から openssl に切り替え(形式問題の回避)
+          openssl pkcs12 -in signing.p12 -passin "pass:$P12_PASS" -nokeys -clcerts -out cert.pem
+          openssl pkcs12 -in signing.p12 -passin "pass:$P12_PASS" -nocerts -nodes -out key.pem
+          security import cert.pem -k "$KEYCHAIN" -T /usr/bin/codesign
+          security import key.pem -k "$KEYCHAIN" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple: -k "$KC_PASS" "$KEYCHAIN" > /dev/null
+          security find-identity -v -p codesigning "$KEYCHAIN" || true
+
           APP="build/Build/Products/Release-iphoneos/Whole.app"
           cp signing.mobileprovision "$APP/embedded.mobileprovision"
           security cms -D -i signing.mobileprovision > profile-full.plist
           /usr/libexec/PlistBuddy -x -c 'Print :Entitlements' profile-full.plist > entitlements.plist
-          IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | awk -F'"' '/Distribution|Development/{print $2; exit}')
+          IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | awk -F'"' '/iPhone Distribution|Apple Distribution|Apple Development/{print $2; exit}')
           echo "Signing identity: $IDENTITY"
           codesign -f -s "$IDENTITY" --entitlements entitlements.plist "$APP"
           codesign --verify --verbose=1 "$APP"
