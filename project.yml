@@ -14,6 +14,14 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     GENERATE_INFOPLIST_FILE: "NO"
 
+packages:
+  Zsign:
+    url: https://github.com/claration/zsign
+    branch: package
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation
+    minVersion: 0.9.20
+
 targets:
   Whole:
     type: application
@@ -26,6 +34,9 @@ targets:
         buildPhase: resources
     info:
       path: Sources/Info.plist
+    dependencies:
+      - package: Zsign
+      - package: ZIPFoundation
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.date8631.cassiopeia7025

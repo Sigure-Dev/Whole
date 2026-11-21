@@ -108,6 +108,7 @@ enum ModuleRegistry {
         developerHaptics,
         developerURLScheme,
         developerFonts,
+        developerSigner,
         mediaTone,
         mediaHapticPattern,
         mediaBrightness,
