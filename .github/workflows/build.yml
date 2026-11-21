@@ -134,16 +134,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
+          # 認証プロンプトでハングしないよう即時失敗させる
+          export GIT_TERMINAL_PROMPT=0
+          export GIT_ASKPASS=/bin/echo
           PAGES_DIR="$GITHUB_WORKSPACE/../pages-deploy"
           rm -rf "$PAGES_DIR"
           if ! git clone --depth 1 --branch gh-pages "https://x-access-token:${GH_TOKEN}@github.com/Sigure-Dev/Whole.git" "$PAGES_DIR" 2>/dev/null; then
-            echo "gh-pages not found, creating"
+            echo "checkpoint: gh-pages not found, creating"
             mkdir -p "$PAGES_DIR"
             cd "$PAGES_DIR"
             git init -b gh-pages
             git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/Sigure-Dev/Whole.git"
+          else
+            echo "checkpoint: gh-pages cloned"
+            cd "$PAGES_DIR"
           fi
-          cd "$PAGES_DIR"
           git config user.name "whole-ci"
           git config user.email "actions@users.noreply.github.com"
 
@@ -152,6 +157,7 @@ jobs:
           sips -z 512 512 icon-src.png --out icon-512.png >/dev/null
           sips -z 57 57 icon-src.png --out icon-57.png >/dev/null
           rm icon-src.png
+          echo "checkpoint: files staged"
 
           VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$GITHUB_WORKSPACE/Payload/Whole.app/Info.plist")
           BUILDNUM=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$GITHUB_WORKSPACE/Payload/Whole.app/Info.plist")
@@ -234,5 +240,6 @@ jobs:
 
           git add -A
           git commit -m "Deploy v${VERSION} (${BUILDNUM}) ${DATE}" || echo "no changes"
-          git push origin gh-pages
+          echo "checkpoint: committed, pushing..."
+          git push origin gh-pages 2>&1
           echo "OTA deployed to gh-pages"
