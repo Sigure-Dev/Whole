@@ -43,6 +43,10 @@
 	</array>
 	<key>NFCUsageDescription</key>
 	<string>NFCタグの読み取りにNFCを使用します。</string>
+	<key>NSCameraUsageDescription</key>
+	<string>QRコード・バーコードの読み取りにカメラを使用します。</string>
+	<key>NSMotionUsageDescription</key>
+	<string>歩数の取得にモーションデータを使用します。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>コンパスで方位を表示するために使用します。</string>
 </dict>

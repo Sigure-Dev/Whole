@@ -5,6 +5,7 @@ import CoreNFC
 // MARK: - モジュールカテゴリ
 
 enum ModuleCategory: String, CaseIterable, Identifiable {
+    case tools = "Tools"
     case network = "Network"
     case nfc = "NFC"
     case security = "Security"
@@ -16,6 +17,7 @@ enum ModuleCategory: String, CaseIterable, Identifiable {
 
     var icon: String {
         switch self {
+        case .tools: return "wrench.and.screwdriver"
         case .network: return "wifi"
         case .nfc: return "dot.radiowaves.left.and.right"
         case .security: return "lock.shield"
@@ -27,6 +29,7 @@ enum ModuleCategory: String, CaseIterable, Identifiable {
 
     var color: Color {
         switch self {
+        case .tools: return Color(red: 0.96, green: 0.62, blue: 0.14)
         case .network: return Color(red: 0.10, green: 0.55, blue: 0.95)
         case .nfc: return Color(red: 0.10, green: 0.72, blue: 0.40)
         case .security: return Color(red: 0.95, green: 0.30, blue: 0.38)
@@ -38,10 +41,11 @@ enum ModuleCategory: String, CaseIterable, Identifiable {
 
     var summary: String {
         switch self {
+        case .tools: return "電卓・変換・QR・メモ・時間"
         case .network: return "接続・HTTP・DNS"
         case .nfc: return "タグ読み取り・IDm"
-        case .security: return "Keychain・ハッシュ・生成"
-        case .developer: return "ビルド情報・検証ツール"
+        case .security: return "Keychain・ハッシュ・暗号"
+        case .developer: return "ビルド情報・署名・検証"
         case .media: return "音・触覚・画像情報"
         case .hardware: return "センサー・電源・端末"
         }
@@ -97,26 +101,51 @@ struct ToolboxModule: Identifiable {
 enum ModuleRegistry {
     /// 全モジュール。makeView は遅延なのでここでは軽量(メタデータのみ)。
     static let modules: [ToolboxModule] = [
+        // Tools(旧実績ビュー)
+        toolsCalculator,
+        toolsUnits,
+        toolsQRGen,
+        toolsQRScan,
+        toolsText,
+        toolsColor,
+        toolsNotes,
+        toolsRandom,
+        toolsCounter,
+        toolsStopwatch,
+        toolsTimer,
+        toolsWorldClock,
+        toolsFlashlight,
+        // Network
         networkConnection,
         networkHTTP,
         networkDNS,
+        networkState,
+        networkSpeed,
+        // NFC
         nfcTagReader,
+        // Security
         securityKeychain,
         securityHash,
         securityPassword,
+        securityAES,
+        securityStrength,
+        // Developer
         developerBuildInfo,
         developerHaptics,
         developerURLScheme,
         developerFonts,
         developerSigner,
+        // Media
         mediaTone,
         mediaHapticPattern,
         mediaBrightness,
         mediaEXIF,
+        // Hardware
         hardwareDevice,
         hardwareBattery,
         hardwareMotion,
         hardwareCompass,
+        hardwarePedometer,
     ]
 
     static func modules(in category: ModuleCategory) -> [ToolboxModule] {
