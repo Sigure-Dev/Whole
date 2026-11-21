@@ -89,22 +89,22 @@ jobs:
 
           # 空配列・空文字の権限を除去( OTA整合性検証の失敗原因候補)
           python3 - <<'PY'
-import plistlib
-with open('entitlements.plist', 'rb') as f:
-    ent = plistlib.load(f)
-clean = {}
-for k, v in ent.items():
-    if isinstance(v, (list, dict)) and len(v) == 0:
-        print('dropping empty:', k)
-        continue
-    if isinstance(v, str) and not v.strip():
-        print('dropping empty:', k)
-        continue
-    clean[k] = v
-with open('entitlements.plist', 'wb') as f:
-    plistlib.dump(clean, f)
-print('kept %d entitlements' % len(clean))
-PY
+          import plistlib
+          with open('entitlements.plist', 'rb') as f:
+              ent = plistlib.load(f)
+          clean = {}
+          for k, v in ent.items():
+              if isinstance(v, (list, dict)) and len(v) == 0:
+                  print('dropping empty:', k)
+                  continue
+              if isinstance(v, str) and not v.strip():
+                  print('dropping empty:', k)
+                  continue
+              clean[k] = v
+          with open('entitlements.plist', 'wb') as f:
+              plistlib.dump(clean, f)
+          print('kept %d entitlements' % len(clean))
+          PY
           IDENTITY=$(security find-identity -v -p codesigning "$KEYCHAIN" | awk -F'"' '/iPhone Distribution|Apple Distribution|Apple Development/{print $2; exit}')
           echo "Signing identity: $IDENTITY"
           codesign -f -s "$IDENTITY" --entitlements entitlements.plist "$APP"
