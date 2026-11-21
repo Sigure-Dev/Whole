@@ -6,6 +6,7 @@ Payload/
 *.ipa
 *.log
 dist/
+temp/
 
 # macOS / Xcode
 .DS_Store
