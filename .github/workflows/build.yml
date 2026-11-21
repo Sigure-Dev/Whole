@@ -83,6 +83,9 @@ jobs:
           security find-identity -v -p codesigning "$KEYCHAIN" || true
 
           APP="build/Build/Products/Release-iphoneos/Whole.app"
+          # Webインストーラー用に未署名のまま退避(プロファイル埋め込み/署名の前)
+          rm -rf unsigned-app
+          cp -R "$APP" unsigned-app
           cp signing.mobileprovision "$APP/embedded.mobileprovision"
           security cms -D -i signing.mobileprovision > profile-full.plist
           /usr/libexec/PlistBuddy -x -c 'Print :Entitlements' profile-full.plist > entitlements.plist
@@ -108,13 +111,24 @@ jobs:
           fi
           zip -qry "$NAME" Payload
           echo "IPA_NAME=$NAME" >> "$GITHUB_ENV"
+
+          # 未署名版(Webインストーラー用)もパッケージ
+          if [ -d unsigned-app ]; then
+            rm -rf Payload-unsigned
+            mkdir -p Payload-unsigned/Payload
+            cp -R unsigned-app Payload-unsigned/Payload/Whole.app
+            zip -qry Whole-unsigned.ipa Payload-unsigned/Payload 2>/dev/null || (cd Payload-unsigned && zip -qry ../Whole-unsigned.ipa Payload)
+            ls -lh Whole-unsigned.ipa
+          fi
           ls -lh "$NAME"
 
       - name: Upload IPA (artifact)
         uses: actions/upload-artifact@v4
         with:
           name: Whole-ipa
-          path: ${{ env.IPA_NAME }}
+          path: |
+            Whole-signed.ipa
+            Whole-unsigned.ipa
           if-no-files-found: error
 
       - name: Upload build log (on failure)
