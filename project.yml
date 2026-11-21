@@ -32,14 +32,13 @@ targets:
           - "Info.plist"
       - path: Resources/Assets.xcassets
         buildPhase: resources
-    info:
-      path: Sources/Info.plist
     dependencies:
       - package: Zsign
       - package: ZIPFoundation
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.date8631.cassiopeia7025
+        INFOPLIST_FILE: Sources/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIcon-Yoko AppIcon-YokoYoko"
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
