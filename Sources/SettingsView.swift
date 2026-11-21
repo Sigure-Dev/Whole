@@ -75,10 +75,8 @@ struct IconVariant: Identifiable {
 
     static let all: [IconVariant] = [
         IconVariant(name: "デフォルト", alternateName: nil, previewAsset: "IconPreview-Default"),
-        IconVariant(name: "オーシャン", alternateName: "AppIcon-Ocean", previewAsset: "IconPreview-Ocean"),
-        IconVariant(name: "サクラ", alternateName: "AppIcon-Sakura", previewAsset: "IconPreview-Sakura"),
-        IconVariant(name: "サンセット", alternateName: "AppIcon-Sunset", previewAsset: "IconPreview-Sunset"),
-        IconVariant(name: "フォレスト", alternateName: "AppIcon-Forest", previewAsset: "IconPreview-Forest"),
+        IconVariant(name: "ヨコ", alternateName: "AppIcon-Yoko", previewAsset: "IconPreview-Yoko"),
+        IconVariant(name: "ヨコヨコ", alternateName: "AppIcon-YokoYoko", previewAsset: "IconPreview-YokoYoko"),
     ]
 }
 

@@ -49,41 +49,23 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>AppIcon-Ocean</key>
+			<key>AppIcon-Yoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Ocean</string>
+					<string>AppIcon-Yoko</string>
 				</array>
 				<key>CFBundleIconName</key>
-				<string>AppIcon-Ocean</string>
+				<string>AppIcon-Yoko</string>
 			</dict>
-			<key>AppIcon-Sakura</key>
+			<key>AppIcon-YokoYoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Sakura</string>
+					<string>AppIcon-YokoYoko</string>
 				</array>
 				<key>CFBundleIconName</key>
-				<string>AppIcon-Sakura</string>
-			</dict>
-			<key>AppIcon-Sunset</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon-Sunset</string>
-				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Sunset</string>
-			</dict>
-			<key>AppIcon-Forest</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon-Forest</string>
-				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Forest</string>
+				<string>AppIcon-YokoYoko</string>
 			</dict>
 		</dict>
 	</dict>
@@ -91,41 +73,23 @@
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>AppIcon-Ocean</key>
+			<key>AppIcon-Yoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Ocean</string>
+					<string>AppIcon-Yoko</string>
 				</array>
 				<key>CFBundleIconName</key>
-				<string>AppIcon-Ocean</string>
+				<string>AppIcon-Yoko</string>
 			</dict>
-			<key>AppIcon-Sakura</key>
+			<key>AppIcon-YokoYoko</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Sakura</string>
+					<string>AppIcon-YokoYoko</string>
 				</array>
 				<key>CFBundleIconName</key>
-				<string>AppIcon-Sakura</string>
-			</dict>
-			<key>AppIcon-Sunset</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon-Sunset</string>
-				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Sunset</string>
-			</dict>
-			<key>AppIcon-Forest</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>AppIcon-Forest</string>
-				</array>
-				<key>CFBundleIconName</key>
-				<string>AppIcon-Forest</string>
+				<string>AppIcon-YokoYoko</string>
 			</dict>
 		</dict>
 	</dict>
