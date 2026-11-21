@@ -5,6 +5,7 @@ Whole.xcodeproj
 Payload/
 *.ipa
 *.log
+dist/
 
 # macOS / Xcode
 .DS_Store
