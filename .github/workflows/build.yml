@@ -77,6 +77,8 @@ jobs:
           openssl pkcs12 -in signing.p12 -passin "pass:$P12_PASS" -nocerts -nodes -out key.pem
           security import cert.pem -k "$KEYCHAIN" -T /usr/bin/codesign
           security import key.pem -k "$KEYCHAIN" -T /usr/bin/codesign
+          # WWDR中間証明書を鍵束に入れて署名に埋め込む(OTA整合性検証に必須)
+          security import "$GITHUB_WORKSPACE/.github/certs/AppleWWDRCAG3.cer" -k "$KEYCHAIN"
           security set-key-partition-list -S apple-tool:,apple: -k "$KC_PASS" "$KEYCHAIN" > /dev/null
           security find-identity -v -p codesigning "$KEYCHAIN" || true
 
@@ -88,6 +90,8 @@ jobs:
           echo "Signing identity: $IDENTITY"
           codesign -f -s "$IDENTITY" --entitlements entitlements.plist "$APP"
           codesign --verify --verbose=1 "$APP"
+          echo "--- signature chain ---"
+          codesign -dv "$APP" 2>&1 | grep -E "Authority|TeamIdentifier" || true
           security delete-keychain "$KEYCHAIN"
 
       - name: Package IPA
