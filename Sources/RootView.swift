@@ -1,93 +1,6 @@
 import SwiftUI
 
-// MARK: - データモデル
-
-struct Feature: Identifiable {
-    let icon: String
-    let title: String
-    let subtitle: String
-    let color: Color
-    let view: AnyView
-    var id: String { title }
-}
-
-struct FeatureSectionData: Identifiable {
-    let header: String
-    let features: [Feature]
-    var id: String { header }
-}
-
-enum FeatureData {
-    static let convertCalc: [Feature] = [
-        Feature(icon: "plus.forwardslash.minus", title: "電卓", subtitle: "四則演算・パーセント", color: .orange, view: AnyView(CalculatorView())),
-        Feature(icon: "arrow.left.arrow.right", title: "単位変換", subtitle: "長さ・重さ・温度・データなど", color: .blue, view: AnyView(UnitConverterView())),
-    ]
-    static let convertCode: [Feature] = [
-        Feature(icon: "qrcode", title: "QRコード生成", subtitle: "テキストからQRを作成", color: .gray, view: AnyView(QRGeneratorView())),
-        Feature(icon: "qrcode.viewfinder", title: "QRスキャナー", subtitle: "カメラでQR・バーコード読み取り", color: .teal, view: AnyView(QRScannerView())),
-        Feature(icon: "textformat", title: "テキストツール", subtitle: "文字数・Base64・変換", color: .purple, view: AnyView(TextToolView())),
-        Feature(icon: "paintpalette", title: "カラーツール", subtitle: "カラーピッカーとHEX", color: .pink, view: AnyView(ColorToolView())),
-    ]
-    static let toolsBasics: [Feature] = [
-        Feature(icon: "note.text", title: "メモ", subtitle: "端末内に保存", color: .orange, view: AnyView(NotesView())),
-        Feature(icon: "dice", title: "ランダム", subtitle: "ダイス・コイン・乱数", color: .brown, view: AnyView(RandomToolsView())),
-        Feature(icon: "number", title: "カウンタ", subtitle: "タップして数を数える", color: .mint, view: AnyView(CounterView())),
-    ]
-    static let toolsLightSound: [Feature] = [
-        Feature(icon: "speaker.wave.3", title: "トーン発生", subtitle: "テスト音を鳴らす", color: .cyan, view: AnyView(ToneGeneratorView())),
-        Feature(icon: "flashlight.on.fill", title: "懐中電灯", subtitle: "ライト点灯・明るさ調整", color: .yellow, view: AnyView(FlashlightView())),
-    ]
-    static let measureTime: [Feature] = [
-        Feature(icon: "stopwatch", title: "ストップウォッチ", subtitle: "ラップ付き計測", color: .green, view: AnyView(StopwatchView())),
-        Feature(icon: "timer", title: "タイマー", subtitle: "カウントダウン", color: .red, view: AnyView(TimerToolView())),
-        Feature(icon: "clock", title: "世界時計", subtitle: "主要都市の現在時刻", color: .indigo, view: AnyView(WorldClockView())),
-    ]
-    static let measureDevice: [Feature] = [
-        Feature(icon: "iphone", title: "デバイス情報", subtitle: "機種・バッテリー・容量", color: .blue, view: AnyView(DeviceInfoView())),
-        Feature(icon: "move.3d", title: "モーション", subtitle: "加速度・ジャイロ・水準器", color: .orange, view: AnyView(MotionView())),
-        Feature(icon: "safari", title: "コンパス", subtitle: "方位を表示", color: .red, view: AnyView(CompassView())),
-    ]
-
-    static let homeSections: [FeatureSectionData] = [
-        FeatureSectionData(header: "変換・コード", features: convertCalc + convertCode),
-        FeatureSectionData(header: "ツール", features: toolsBasics + toolsLightSound),
-        FeatureSectionData(header: "計測・デバイス", features: measureTime + measureDevice),
-    ]
-}
-
-// MARK: - 共通パーツ
-
-struct FeatureIcon: View {
-    let systemName: String
-    let color: Color
-
-    var body: some View {
-        Image(systemName: systemName)
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.white)
-            .frame(width: 34, height: 34)
-            .background(RoundedRectangle(cornerRadius: 8).fill(color))
-    }
-}
-
-struct FeatureRow: View {
-    let feature: Feature
-
-    var body: some View {
-        HStack(spacing: 12) {
-            FeatureIcon(systemName: feature.icon, color: feature.color)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(feature.title)
-                Text(feature.subtitle)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding(.vertical, 2)
-    }
-}
-
-// MARK: - ルート(Liquid Glass ドックバー)
+// MARK: - ルート(Application Shell)
 
 struct RootView: View {
     @State private var tab = 0
@@ -106,187 +19,236 @@ struct RootView: View {
             case 0:
                 HomeTab().transition(.opacity)
             case 1:
-                FeatureListTab(title: "ツール", sections: [
-                    FeatureSectionData(header: "ツール", features: FeatureData.toolsBasics),
-                    FeatureSectionData(header: "音と光", features: FeatureData.toolsLightSound),
-                ])
-                .transition(.opacity)
-            case 2:
-                FeatureListTab(title: "計測", sections: [
-                    FeatureSectionData(header: "時間", features: FeatureData.measureTime),
-                    FeatureSectionData(header: "デバイス", features: FeatureData.measureDevice),
-                ])
-                .transition(.opacity)
-            case 3:
-                FeatureListTab(title: "変換", sections: [
-                    FeatureSectionData(header: "計算", features: FeatureData.convertCalc),
-                    FeatureSectionData(header: "コード・テキスト", features: FeatureData.convertCode),
-                ])
-                .transition(.opacity)
+                RuntimeTab().transition(.opacity)
             default:
                 SettingsView().transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.2), value: tab)
+        .animation(.easeInOut(duration: 0.18), value: tab)
     }
 }
 
-// MARK: - ホーム(ランチャー)
+// MARK: - ホーム(モジュールディレクトリ + 検索)
 
 struct HomeTab: View {
     @ObservedObject private var settings = Settings.shared
+    @State private var query = ""
 
     var body: some View {
         NavigationView {
             ScrollView {
-                LazyVStack(alignment: .leading, spacing: 16) {
-                    ForEach(FeatureData.homeSections) { section in
-                        Text(section.header)
-                            .font(.headline)
-                            .padding(.horizontal, 4)
-                        LazyVGrid(
-                            columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: settings.homeColumns),
-                            spacing: 12
-                        ) {
-                            ForEach(section.features) { f in
-                                NavigationLink(destination: f.view) {
-                                    HomeCard(feature: f)
-                                }
-                                .buttonStyle(.plain)
-                            }
+                LazyVStack(alignment: .leading, spacing: 14) {
+                    searchBar
+                    if query.isEmpty {
+                        ForEach(ModuleCategory.allCases) { category in
+                            categorySection(category)
                         }
+                    } else {
+                        resultSection
                     }
                 }
-                .padding(.horizontal)
-                .padding(.top, 6)
-                .padding(.bottom, 90)
+                .padding(.horizontal, 12)
+                .padding(.top, 4)
+                .padding(.bottom, 84)
             }
             .background(Color(.systemGroupedBackground).ignoresSafeArea())
             .navigationTitle("Whole")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
     }
-}
 
-struct HomeCard: View {
-    let feature: Feature
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            FeatureIcon(systemName: feature.icon, color: feature.color)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(feature.title)
-                    .font(.subheadline)
-                    .bold()
-                    .foregroundColor(.primary)
-                    .lineLimit(1)
-                Text(feature.subtitle)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
+    private var searchBar: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.secondary)
+            TextField("モジュールを検索", text: $query)
+                .font(.system(size: 13))
+                .autocorrectionDisabled()
+            if !query.isEmpty {
+                Button {
+                    query = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(.secondary)
+                }
             }
         }
-        .padding(12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(RoundedRectangle(cornerRadius: 14).fill(Color(.secondarySystemGroupedBackground)))
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(Capsule().fill(Color(.secondarySystemGroupedBackground)))
     }
-}
 
-// MARK: - リスト型タブ
+    private func categorySection(_ category: ModuleCategory) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 5) {
+                Image(systemName: category.icon)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(category.color)
+                Text(category.rawValue)
+                    .font(.system(size: 13, weight: .bold))
+                Text(category.summary)
+                    .font(.system(size: 10))
+                    .foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 2)
+            LazyVGrid(
+                columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: settings.homeColumns),
+                spacing: 8
+            ) {
+                ForEach(ModuleRegistry.modules(in: category)) { module in
+                    NavigationLink(destination: ModulePage(module: module)) {
+                        ModuleCard(module: module)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
 
-struct FeatureListTab: View {
-    let title: String
-    let sections: [FeatureSectionData]
-
-    var body: some View {
-        NavigationView {
-            List {
-                ForEach(sections) { section in
-                    Section(header: Text(section.header)) {
-                        ForEach(section.features) { f in
-                            NavigationLink {
-                                f.view
-                            } label: {
-                                FeatureRow(feature: f)
-                            }
+    private var resultSection: some View {
+        let results = ModuleRegistry.search(query)
+        return VStack(alignment: .leading, spacing: 6) {
+            if results.isEmpty {
+                Text("「\(query)」に一致するモジュールはありません")
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
+                    .padding(.top, 20)
+            } else {
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: settings.homeColumns),
+                    spacing: 8
+                ) {
+                    ForEach(results) { module in
+                        NavigationLink(destination: ModulePage(module: module)) {
+                            ModuleCard(module: module)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
-            .listStyle(.insetGrouped)
-            .safeAreaInset(edge: .bottom) {
-                Color.clear.frame(height: 72)
-            }
-            .navigationTitle(title)
         }
-        .navigationViewStyle(.stack)
     }
 }
 
-// MARK: - Liquid Glass タブバー
+// MARK: - コンパクトカード
+
+struct ModuleCard: View {
+    let module: ToolboxModule
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            ModuleIcon(systemName: module.icon, color: module.category.color, size: 26)
+            Text(module.title)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.primary)
+                .lineLimit(1)
+            Text(module.summary)
+                .font(.system(size: 9.5))
+                .foregroundColor(.secondary)
+                .lineLimit(2)
+                .multilineTextAlignment(.leading)
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemGroupedBackground)))
+    }
+}
+
+// MARK: - モジュールページ(遅延ロード + ライフサイクル)
+
+struct ModulePage: View {
+    let module: ToolboxModule
+    @State private var loaded = false
+
+    var body: some View {
+        Group {
+            if loaded {
+                module.makeView()
+            } else {
+                VStack(spacing: 8) {
+                    ProgressView()
+                    Text("モジュール読込中…")
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        .navigationTitle(module.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            guard !loaded else { return }
+            ModuleRuntime.shared.transition(module.id, to: .active)
+            // 1フレーム遅らせて実体化 = 遅延ロード
+            DispatchQueue.main.async { loaded = true }
+        }
+        .onDisappear {
+            if loaded {
+                ModuleRuntime.shared.transition(module.id, to: .released)
+            }
+            loaded = false
+        }
+    }
+}
+
+// MARK: - Liquid Glass タブバー(コンパクト・アイコンのみ)
 
 struct GlassTabBar: View {
     @Binding var selection: Int
     @Namespace private var ns
-    @ObservedObject private var settings = Settings.shared
 
-    private let items: [(icon: String, label: String)] = [
-        ("house.fill", "ホーム"),
-        ("wrench.and.screwdriver.fill", "ツール"),
-        ("timer", "計測"),
-        ("arrow.left.arrow.right", "変換"),
-        ("gearshape.fill", "設定"),
+    private let icons: [String] = [
+        "house.fill",
+        "cpu",
+        "gearshape.fill",
     ]
 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(items.indices, id: \.self) { i in
+            ForEach(icons.indices, id: \.self) { i in
                 tabButton(i)
             }
         }
-        .padding(6)
+        .padding(4)
         .background(glassBackground)
-        .padding(.horizontal, 20)
-        .padding(.bottom, 6)
+        .padding(.horizontal, 56)
+        .padding(.bottom, 5)
     }
 
     private func tabButton(_ i: Int) -> some View {
         let selected = selection == i
         return Button {
             guard selection != i else { return }
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.75)) {
                 selection = i
             }
             haptic(.light)
         } label: {
-            VStack(spacing: 3) {
-                Image(systemName: items[i].icon)
-                    .font(.system(size: 20, weight: .semibold))
-                    .frame(height: 24)
-                Text(items[i].label)
-                    .font(.system(size: 10, weight: .semibold))
-            }
-            .foregroundColor(selected ? Color.appAccent : .secondary)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 7)
-            .background {
-                if selected {
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.appAccent.opacity(0.34), Color.appAccent.opacity(0.14)],
-                                startPoint: .top,
-                                endPoint: .bottom
+            Image(systemName: icons[i])
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(selected ? Color.appAccent : .secondary)
+                .frame(maxWidth: .infinity)
+                .frame(height: 30)
+                .background {
+                    if selected {
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.appAccent.opacity(0.32), Color.appAccent.opacity(0.12)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
                             )
-                        )
-                        .overlay(
-                            Capsule().strokeBorder(Color.white.opacity(0.35), lineWidth: 0.8)
-                        )
-                        .matchedGeometryEffect(id: "tabPill", in: ns)
+                            .overlay(
+                                Capsule().strokeBorder(Color.white.opacity(0.3), lineWidth: 0.7)
+                            )
+                            .matchedGeometryEffect(id: "tabPill", in: ns)
+                    }
                 }
-            }
-            .contentShape(Capsule())
+                .contentShape(Capsule())
         }
         .buttonStyle(.plain)
     }
@@ -297,13 +259,13 @@ struct GlassTabBar: View {
             .overlay(
                 Capsule().strokeBorder(
                     LinearGradient(
-                        colors: [Color.white.opacity(0.65), Color.white.opacity(0.08)],
+                        colors: [Color.white.opacity(0.6), Color.white.opacity(0.08)],
                         startPoint: .top,
                         endPoint: .bottom
                     ),
-                    lineWidth: 1
+                    lineWidth: 0.8
                 )
             )
-            .shadow(color: Color.black.opacity(0.22), radius: 14, x: 0, y: 8)
+            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 6)
     }
 }
