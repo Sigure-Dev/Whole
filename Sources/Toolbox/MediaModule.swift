@@ -164,17 +164,17 @@ private struct HapticPatternView: View {
             let events: [CHHapticEvent]
             switch kind {
             case .short:
-                events = [CHHapticEvent(eventType: .hapticTransient, parameters: [:], relativeTime: 0)]
+                events = [CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 0)]
             case .long:
                 events = [CHHapticEvent(eventType: .hapticContinuous, parameters: [
                     CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.8),
                 ], relativeTime: 0, duration: 0.6)]
             case .heartbeat:
                 events = [
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [:], relativeTime: 0),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [:], relativeTime: 0.18),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [:], relativeTime: 1.0),
-                    CHHapticEvent(eventType: .hapticTransient, parameters: [:], relativeTime: 1.18),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 0),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 0.18),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 1.0),
+                    CHHapticEvent(eventType: .hapticTransient, parameters: [], relativeTime: 1.18),
                 ]
             case .sweep:
                 events = [

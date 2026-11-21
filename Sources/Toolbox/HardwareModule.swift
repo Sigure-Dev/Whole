@@ -307,7 +307,7 @@ let hardwareCompass = ToolboxModule(
     icon: "safari", category: .hardware,
     permissions: [
         PermissionRequirement(name: "位置情報", detail: "方位表示に必要") {
-            PermissionCenter.location() == .granted
+            PermissionCenter.location() == .granted ? .granted : .denied
         }
     ],
     makeView: { AnyView(CompassToolView()) }

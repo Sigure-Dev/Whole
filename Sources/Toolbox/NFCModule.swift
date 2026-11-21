@@ -76,7 +76,7 @@ final class NFCTagSessionHolder: NSObject, NFCTagReaderSessionDelegate {
             onFinish()
             return
         }
-        let s = NFCTagReaderSession(pollingOption: [.iso14443, .feliCa, .iso15693], delegate: self)
+        let s = NFCTagReaderSession(pollingOption: [.iso14443, .iso18092, .iso15693], delegate: self)
         s?.alertMessage = "タグをかざしてください"
         session = s
         ModuleRuntime.shared.appendLog("nfc: session start")
@@ -148,7 +148,7 @@ let nfcTagReader = ToolboxModule(
     icon: "dot.radiowaves.left.and.right", category: .nfc,
     permissions: [
         PermissionRequirement(name: "NFC", detail: "NFC読み取り権限と対応端末") {
-            PermissionCenter.nfcSupported
+            PermissionCenter.nfcSupported ? .granted : .denied
         }
     ],
     makeView: { AnyView(NFCReaderView()) }

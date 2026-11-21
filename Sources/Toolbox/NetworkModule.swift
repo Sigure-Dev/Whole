@@ -85,11 +85,19 @@ private struct ConnectionInfoView: View {
         return result
     }
 
+    // 新しいSDKではCaptiveNetwork APIがSwiftから露出しないため直接リンク
+    @_silgen_name("CNCopySupportedInterfaces")
+    static func cCopySupportedInterfaces() -> CFArray?
+
+    @_silgen_name("CNCopyCurrentNetworkInfo")
+    static func cCopyCurrentNetworkInfo(_ interface: CFString) -> CFDictionary?
+
     static func currentSSID() -> String? {
-        guard let ifs = CNCopySupportedInterfaces() as? [String] else { return nil }
+        guard PermissionCenter.location() == .granted else { return nil }
+        guard let ifs = cCopySupportedInterfaces() as? [String] else { return nil }
         for ifn in ifs {
-            if let dict = CNCopyCurrentNetworkInfo(ifn as CFString) as? [String: Any],
-               let s = dict[kCNNetworkInfoKeySSID as String] as? String {
+            if let dict = cCopyCurrentNetworkInfo(ifn as CFString) as? [String: Any],
+               let s = dict["SSID"] as? String {
                 return s
             }
         }
@@ -262,7 +270,7 @@ let networkConnection = ToolboxModule(
     icon: "wifi", category: .network,
     permissions: [
         PermissionRequirement(name: "位置情報(Wi-Fi SSID用)", detail: "iOSの仕様でSSID取得に必要") {
-            PermissionCenter.location() == .granted
+            PermissionCenter.location() == .granted ? .granted : .denied
         }
     ],
     makeView: { AnyView(ConnectionInfoView()) }

@@ -207,6 +207,7 @@ private struct PasswordGenView: View {
             password = ""
             return
         }
+        let chars = Array(pool)
         let n = Int(length)
         var bytes = [UInt8](repeating: 0, count: n)
         let s = SecRandomCopyBytes(kSecRandomDefault, n, &bytes)
@@ -214,7 +215,7 @@ private struct PasswordGenView: View {
             password = ""
             return
         }
-        password = String(bytes.map { pool[Int($0) % pool.count] })
+        password = String(bytes.map { chars[Int($0) % chars.count] })
     }
 }
 
