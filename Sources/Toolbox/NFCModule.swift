@@ -12,32 +12,25 @@ private struct NFCReaderView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
-                if !PermissionCenter.nfcSupported {
-                    ToolSection(title: "非対応", icon: "exclamationmark.triangle") {
-                        Text("この端末/証明書ではNFCが使用できません。\n(com.apple.developer.nfc.readersession.formats 権限とNFC対応端末が必要)")
-                            .font(.system(size: 12))
-                            .foregroundColor(.secondary)
+                ToolSection(title: "タグ読み取り", icon: "dot.radiowaves.left.and.right") {
+                    KeyValueRow(key: "NFC可用性", value: PermissionCenter.nfcSupported ? "OK" : "NG(権限不足の可能性)")
+                    Button {
+                        startScan()
+                    } label: {
+                        Label(scanning ? "スキャン中…" : "スキャン開始", systemImage: "sensor.tag.radiowaves.forward")
+                            .font(.system(size: 13, weight: .semibold))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.appAccent.opacity(0.18)))
                     }
-                } else {
-                    ToolSection(title: "タグ読み取り", icon: "dot.radiowaves.left.and.right") {
-                        Button {
-                            startScan()
-                        } label: {
-                            Label(scanning ? "スキャン中…" : "スキャン開始", systemImage: "sensor.tag.radiowaves.forward")
-                                .font(.system(size: 13, weight: .semibold))
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 10)
-                                .background(RoundedRectangle(cornerRadius: 12).fill(Color.appAccent.opacity(0.18)))
-                        }
-                        .buttonStyle(.plain)
-                        .disabled(scanning)
-                        Text("FeliCa(Suica等)・ISO14443・ISO15693タグのUID/IDmを読み取ります")
-                            .font(.system(size: 11))
-                            .foregroundColor(.secondary)
-                    }
+                    .buttonStyle(.plain)
+                    .disabled(scanning)
+                    Text("FeliCa(Suica等)・ISO14443・ISO15693タグのUID/IDmを読み取ります。失敗時はiOSのエラーをそのまま表示します")
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
                 }
                 if !log.isEmpty {
-                    ToolSection(title: "読み取り結果", icon: "list.bullet.rectangle") {
+                    ToolSection(title: "読み取り結果 / ログ", icon: "list.bullet.rectangle") {
                         ForEach(log.indices, id: \.self) { i in
                             Text(log[i])
                                 .font(.system(size: 12, design: .monospaced))
@@ -72,11 +65,20 @@ final class NFCTagSessionHolder: NSObject, NFCTagReaderSessionDelegate {
         self.onLine = onLine
         self.onFinish = onFinish
         guard NFCTagReaderSession.readingAvailable else {
-            onLine("NFCセッションを開始できません(権限または端末非対応)")
+            // CoreNFCは権限が無いとbegin()でクラッシュするため、試行せず診断を出す
+            onLine("✕ この署名にはNFC権限(com.apple.developer.nfc.readersession.formats)がありません")
+            onLine("  CoreNFCは権限無しで開始するとクラッシュするため試行を中止しました")
+            onLine("  → CI署名版(QRのOTA / 3uTools)をインストールすれば使えます")
+            ModuleRuntime.shared.appendLog("nfc: blocked (no entitlement in signature)")
             onFinish()
             return
         }
         let s = NFCTagReaderSession(pollingOption: [.iso14443, .iso18092, .iso15693], delegate: self)
+        if s == nil {
+            onLine("NFCセッション生成失敗")
+            onFinish()
+            return
+        }
         s?.alertMessage = "タグをかざしてください"
         session = s
         ModuleRuntime.shared.appendLog("nfc: session start")

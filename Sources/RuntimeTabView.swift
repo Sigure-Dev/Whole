@@ -4,6 +4,7 @@ import SwiftUI
 
 struct RuntimeTab: View {
     @ObservedObject private var runtime = ModuleRuntime.shared
+    @State private var permRefresh = 0
 
     var body: some View {
         NavigationView {
@@ -82,11 +83,22 @@ struct RuntimeTab: View {
 
     private var permissionSection: some View {
         ToolSection(title: "権限", icon: "lock.shield") {
+            Button {
+                permRefresh += 1
+            } label: {
+                Label("再確認", systemImage: "arrow.clockwise")
+                    .font(.system(size: 11, weight: .semibold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Capsule().fill(Color.appAccent.opacity(0.15)))
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 4)
             ForEach([
                 PermissionRequirement(name: "位置情報", detail: "コンパス・SSID取得") {
                     PermissionCenter.location()
                 },
-                PermissionRequirement(name: "NFC", detail: "タグ読み取り") {
+                PermissionRequirement(name: "NFC", detail: "タグ読み取り(Webインストーラー署名だと権限が落ちる場合あり)") {
                     PermissionStatus(PermissionCenter.nfcSupported)
                 },
             ]) { req in
@@ -104,7 +116,11 @@ struct RuntimeTab: View {
                         .padding(.vertical, 3)
                         .background(Capsule().fill(status.color))
                 }
+                .id(permRefresh)
             }
+            Text("コンパスを開くと位置情報の許可ダイアログが出ます。許可後「再確認」で状態が更新されます")
+                .font(.system(size: 10.5))
+                .foregroundColor(.secondary)
         }
     }
 
